@@ -1,28 +1,42 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <a-layout>
+    <Header></Header>
+    <a-layout :style="{ height: '100vh', marginTop: '64px' }"><Sider></Sider>
+      <a-layout>
+        <div v-if="banner.length !== 0">
+          <Content v-bind:banner="banner"></Content>
+        </div>
+      </a-layout>
+    </a-layout>
+  </a-layout>
 </template>
-
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Header from "./components/Header.vue";
+import Sider from "@/components/Sider";
+import Content from '@/components/Content'
 
 export default {
-  name: 'App',
+  data() {
+    return { seen: true, banner: [], message: "" };
+  },
+  methods: {
+    async getBanner() {
+      const res = await fetch(`http://tohsaka888.xyz:3000/banner`);
+      const data = await res.json();
+      this.banner = data.banners;
+      console.log(this.banner)
+    },
+  },
+  created() {
+    this.getBanner();
+  },
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    Header,
+    Sider,
+    Content,
+  },
+};
 </script>
-
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
